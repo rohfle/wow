@@ -1,7 +1,7 @@
 <html>
-    <body style="background:black; padding:0; margin:0; overflow:hidden">
+    <body style="background:black; padding:0; margin:0; overflow:hidden; width:100%; height:100%; position:relative">
         <div id="loading" style="color:white">Loading</div>
-        <video id="video" style="background:black; width:100%"></video>
+        <video autoplay controls id="video" style="background:black; width:100%"></video>
         <script>
             fetch("https://owen-wilson-wow-api.herokuapp.com/wows/random?results=10").then((x) => x.json()).then(async (data) => {
                 var myvid = document.getElementById('video');
@@ -9,7 +9,7 @@
                 var items = Object.values(data)
                 var urls = items.map((x) =>  x.video['720p'])
                 var myvids = []
-                for (i = 0; i < urls.length; i++) {
+                for (i = 0; i < 2; i++) {
                     var r = await fetch(urls[i])
                     var b = await r.blob()
                     myvids.push(URL.createObjectURL(b))
@@ -25,6 +25,11 @@
                 });
                 myvid.src = myvids[activeVideo];
                 myvid.play()
+                for (i = 2; i < urls.length; i++) {
+                    var r = await fetch(urls[i])
+                    var b = await r.blob()
+                    myvids.push(URL.createObjectURL(b))
+                }
             })
         </script>
 
