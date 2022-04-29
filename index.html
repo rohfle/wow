@@ -1,0 +1,32 @@
+<html>
+    <body style="background:black; padding:0; margin:0; overflow:hidden">
+        <div id="loading" style="color:white">Loading</div>
+        <video id="video" style="background:black; width:100%"></video>
+        <script>
+            fetch("https://owen-wilson-wow-api.herokuapp.com/wows/random?results=10").then((x) => x.json()).then(async (data) => {
+                var myvid = document.getElementById('video');
+                var loading = document.getElementById('loading')
+                var items = Object.values(data)
+                var urls = items.map((x) =>  x.video['720p'])
+                var myvids = []
+                for (i = 0; i < urls.length; i++) {
+                    var r = await fetch(urls[i])
+                    var b = await r.blob()
+                    myvids.push(URL.createObjectURL(b))
+                }
+                loading.style.display = 'none'
+                var activeVideo = 0;
+                myvid.addEventListener('ended', function(e) {
+                    // update the new active video index
+                    activeVideo = (++activeVideo) % myvids.length;
+                    // update the video source and play
+                    myvid.src = myvids[activeVideo];
+                    myvid.play();
+                });
+                myvid.src = myvids[activeVideo];
+                myvid.play()
+            })
+        </script>
+
+    </body>
+</html>
